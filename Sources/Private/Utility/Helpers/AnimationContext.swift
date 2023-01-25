@@ -19,15 +19,18 @@ struct AnimationContext {
   init(
     playFrom: AnimationFrameTime,
     playTo: AnimationFrameTime,
+    forExportSession: Bool = false,
     closure: LottieCompletionBlock?)
   {
     self.playTo = playTo
     self.playFrom = playFrom
+    self.forExportSession = forExportSession
     self.closure = AnimationCompletionDelegate(completionBlock: closure)
   }
 
   var playFrom: AnimationFrameTime
   var playTo: AnimationFrameTime
+  var forExportSession: Bool
   var closure: AnimationCompletionDelegate
 
 }

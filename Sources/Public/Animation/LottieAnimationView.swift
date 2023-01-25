@@ -495,7 +495,7 @@ final public class LottieAnimationView: LottieAnimationViewBase {
   /// Plays the animation from its current state to the end.
   ///
   /// - Parameter completion: An optional completion closure to be called when the animation completes playing.
-  public func play(completion: LottieCompletionBlock? = nil) {
+  public func play(forExportSession: Bool = false, completion: LottieCompletionBlock? = nil) {
     guard let animation = animation else {
       return
     }
@@ -504,6 +504,7 @@ final public class LottieAnimationView: LottieAnimationViewBase {
     let context = AnimationContext(
       playFrom: CGFloat(animation.startFrame),
       playTo: CGFloat(animation.endFrame),
+      forExportSession: forExportSession,
       closure: completion)
     removeCurrentAnimationIfNecessary()
     addNewAnimationForContext(context)

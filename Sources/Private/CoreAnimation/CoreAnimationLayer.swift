@@ -241,6 +241,7 @@ final class CoreAnimationLayer: BaseAnimationLayer {
 
     let layerContext = LayerAnimationContext(
       animation: animation,
+      forExportSession: configuration.animationContext.forExportSession,
       timingConfiguration: configuration.timingConfiguration,
       startFrame: configuration.animationContext.playFrom,
       endFrame: configuration.animationContext.playTo,
