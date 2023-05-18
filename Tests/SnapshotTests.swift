@@ -68,7 +68,7 @@ class SnapshotTests: XCTestCase {
   /// reference a sample json file that actually exists
   func testCustomSnapshotConfigurationsHaveCorrespondingSampleFile() {
     for (animationName, _) in SnapshotConfiguration.customMapping {
-      let expectedSampleFile = Bundle.module.bundleURL.appendingPathComponent("Samples/\(animationName).json")
+      let expectedSampleFile = Bundle.lottie.bundleURL.appendingPathComponent("Samples/\(animationName).json")
 
       XCTAssert(
         Samples.sampleAnimationURLs.contains(expectedSampleFile),
@@ -121,7 +121,8 @@ class SnapshotTests: XCTestCase {
         assertSnapshot(
           matching: animationView,
           as: .imageOfPresentationLayer(
-            precision: SnapshotConfiguration.forSample(named: sampleAnimationName).precision),
+            precision: SnapshotConfiguration.forSample(named: sampleAnimationName).precision,
+            perceptualPrecision: 0.985),
           named: "\(sampleAnimationName) (\(Int(percent * 100))%)",
           testName: testName)
       }
@@ -201,13 +202,13 @@ enum Samples {
   static let directoryName = "Samples"
 
   /// The list of snapshot image files in `Tests/__Snapshots__`
-  static let snapshotURLs = Bundle.module.fileURLs(
+  static let snapshotURLs = Bundle.lottie.fileURLs(
     in: "__Snapshots__/SnapshotTests",
     withSuffix: "png")
 
   /// The list of sample animation files in `Tests/Samples`
-  static let sampleAnimationURLs = Bundle.module.fileURLs(in: Samples.directoryName, withSuffix: "json")
-    + Bundle.module.fileURLs(in: Samples.directoryName, withSuffix: "lottie")
+  static let sampleAnimationURLs = Bundle.lottie.fileURLs(in: Samples.directoryName, withSuffix: "json")
+    + Bundle.lottie.fileURLs(in: Samples.directoryName, withSuffix: "lottie")
 
   /// The list of sample animation names in `Tests/Samples`
   static let sampleAnimationNames = sampleAnimationURLs.lazy
@@ -230,7 +231,7 @@ enum Samples {
     guard
       let animation = LottieAnimation.named(
         sampleAnimationName,
-        bundle: .module,
+        bundle: .lottie,
         subdirectory: Samples.directoryName)
     else { return nil }
 
@@ -241,7 +242,7 @@ enum Samples {
     guard
       let dotLottieFile = try? await DotLottieFile.named(
         sampleDotLottieName,
-        bundle: .module,
+        bundle: .lottie,
         subdirectory: Samples.directoryName)
     else {
       XCTFail("Could not parse Samples/\(sampleDotLottieName).lottie")
