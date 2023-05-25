@@ -20,7 +20,7 @@ public enum CoordinateSpace: Int, Codable {
 ///
 /// A `LottieAnimation` holds all of the animation data backing a Lottie Animation.
 /// Codable, see JSON schema [here](https://github.com/airbnb/lottie-web/tree/master/docs/json).
-public final class LottieAnimation: Codable, DictionaryInitializable {
+public class LottieAnimation: Codable, DictionaryInitializable {
 
   // MARK: Lifecycle
 
@@ -48,9 +48,11 @@ public final class LottieAnimation: Codable, DictionaryInitializable {
     } else {
       markerMap = nil
     }
+    
+    meta = try container.decodeIfPresent(MetaInfo.self, forKey: .meta)
   }
 
-  public init(dictionary: [String: Any]) throws {
+  required public init(dictionary: [String: Any]) throws {
     version = try dictionary.value(for: CodingKeys.version)
     if
       let typeRawValue = dictionary[CodingKeys.type.rawValue] as? Int,
@@ -94,6 +96,12 @@ public final class LottieAnimation: Codable, DictionaryInitializable {
       markers = nil
       markerMap = nil
     }
+    
+    if let metaDictionary = dictionary[CodingKeys.meta.rawValue] as? [String: Any] {
+      meta = try MetaInfo(dictionary: metaDictionary)
+    } else {
+      meta = nil
+    }
   }
 
   // MARK: Public
@@ -128,6 +136,7 @@ public final class LottieAnimation: Codable, DictionaryInitializable {
     case fonts
     case assetLibrary = "assets"
     case markers
+    case meta
   }
 
   /// The version of the JSON Schema.
@@ -157,4 +166,20 @@ public final class LottieAnimation: Codable, DictionaryInitializable {
   /// Markers
   let markers: [Marker]?
   let markerMap: [String: Marker]?
+  
+  let meta: MetaInfo?
+}
+
+extension LottieAnimation {
+  public final class MetaInfo: Codable, DictionaryInitializable {
+    public enum CodingKeys: String, CodingKey {
+      case pack = "ct"
+    }
+    
+    init(dictionary: [String : Any]) throws {
+      pack = try dictionary.value(for: CodingKeys.pack)
+    }
+
+    let pack: String
+  }
 }

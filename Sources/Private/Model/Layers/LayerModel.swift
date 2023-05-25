@@ -80,6 +80,68 @@ public enum BlendMode: Int, Codable {
 
 /// A base top container for shapes, images, and other view objects.
 class LayerModel: Codable, DictionaryInitializable {
+  
+  public final class MetaInfo: Codable, DictionaryInitializable {
+    enum CodingKeys: String, CodingKey {
+      case type = "cur"
+      case st = "st"
+    }
+    
+    public struct St: Codable, DictionaryInitializable {
+      public struct Sub: Codable, DictionaryInitializable {
+        enum CodingKeys: String, CodingKey {
+          case force_disable_col
+        }
+        public let force_disable_col: Bool
+        
+        init(dictionary: [String : Any]) throws {
+          force_disable_col = try dictionary.value(for: CodingKeys.force_disable_col)
+        }
+      }
+      
+      enum CodingKeys: String, CodingKey {
+        case sub
+        case movable
+        case tintable
+        case monochrome
+        case add_lib
+        case pro
+        case lib_tint
+        case lib_col
+      }
+      
+      public let sub: Sub?
+      public let movable: Bool?
+      public let tintable: Bool?
+      public let monochrome: Bool?
+      public let add_lib: Bool?
+      public let pro: Bool?
+      public let lib_tint: Bool?
+      public let lib_col: String?
+
+      init(dictionary: [String : Any]) throws {
+        let subDictionary: [String: Any]? = try? dictionary.value(for: CodingKeys.sub)
+        sub = try subDictionary.map { try Sub(dictionary: $0) }
+        movable = try? dictionary.value(for: CodingKeys.movable)
+        tintable = try? dictionary.value(for: CodingKeys.tintable)
+        monochrome = try? dictionary.value(for: CodingKeys.monochrome)
+        add_lib = try? dictionary.value(for: CodingKeys.add_lib)
+        pro = try? dictionary.value(for: CodingKeys.pro)
+        lib_tint = try? dictionary.value(for: CodingKeys.lib_tint)
+        lib_col = try? dictionary.value(for: CodingKeys.lib_col)
+      }
+    }
+    
+    let type: String
+    let st: St
+    
+    init(dictionary: [String : Any]) throws {
+      type = try dictionary.value(for: CodingKeys.type)
+      let stDictionary: [String: Any] = try dictionary.value(for: CodingKeys.st)
+      st = try St(dictionary: stDictionary)
+    }
+    
+  }
 
   // MARK: Lifecycle
 
@@ -99,6 +161,7 @@ class LayerModel: Codable, DictionaryInitializable {
     timeStretch = try container.decodeIfPresent(Double.self, forKey: .timeStretch) ?? 1
     matte = try container.decodeIfPresent(MatteType.self, forKey: .matte)
     hidden = try container.decodeIfPresent(Bool.self, forKey: .hidden) ?? false
+    meta = try container.decodeIfPresent(MetaInfo.self, forKey: .meta)
   }
 
   required init(dictionary: [String: Any]) throws {
@@ -138,6 +201,12 @@ class LayerModel: Codable, DictionaryInitializable {
       matte = nil
     }
     hidden = (try? dictionary.value(for: CodingKeys.hidden)) ?? false
+    
+    if let metaDictionary = dictionary[CodingKeys.meta.rawValue] as? [String: Any] {
+      meta = try MetaInfo(dictionary: metaDictionary)
+    } else {
+      meta = nil
+    }
   }
 
   // MARK: Internal
@@ -181,6 +250,8 @@ class LayerModel: Codable, DictionaryInitializable {
   let matte: MatteType?
 
   let hidden: Bool
+  
+  let meta: MetaInfo?
 
   // MARK: Fileprivate
 
@@ -199,6 +270,7 @@ class LayerModel: Codable, DictionaryInitializable {
     case timeStretch = "sr"
     case matte = "tt"
     case hidden = "hd"
+    case meta = "meta"
   }
 }
 
