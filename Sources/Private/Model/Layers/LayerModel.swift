@@ -79,7 +79,7 @@ public enum BlendMode: Int, Codable {
 // MARK: - LayerModel
 
 /// A base top container for shapes, images, and other view objects.
-class LayerModel: Codable, DictionaryInitializable {
+public class LayerModel: Codable, DictionaryInitializable {
   
   public final class MetaInfo: Codable, DictionaryInitializable {
     enum CodingKeys: String, CodingKey {
@@ -145,7 +145,7 @@ class LayerModel: Codable, DictionaryInitializable {
 
   // MARK: Lifecycle
 
-  required init(from decoder: Decoder) throws {
+  required public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: LayerModel.CodingKeys.self)
     name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Layer"
     index = try container.decodeIfPresent(Int.self, forKey: .index) ?? .random(in: Int.min...Int.max)
@@ -164,7 +164,7 @@ class LayerModel: Codable, DictionaryInitializable {
     meta = try container.decodeIfPresent(MetaInfo.self, forKey: .meta)
   }
 
-  required init(dictionary: [String: Any]) throws {
+  required public init(dictionary: [String: Any]) throws {
     name = (try? dictionary.value(for: CodingKeys.name)) ?? "Layer"
     index = try dictionary.value(for: CodingKeys.index) ?? .random(in: Int.min...Int.max)
     type = LayerType(rawValue: try dictionary.value(for: CodingKeys.type)) ?? .null
@@ -251,7 +251,7 @@ class LayerModel: Codable, DictionaryInitializable {
 
   let hidden: Bool
   
-  let meta: MetaInfo?
+  public let meta: MetaInfo?
 
   // MARK: Fileprivate
 

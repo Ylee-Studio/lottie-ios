@@ -21,6 +21,38 @@ public enum CoordinateSpace: Int, Codable {
 /// A `LottieAnimation` holds all of the animation data backing a Lottie Animation.
 /// Codable, see JSON schema [here](https://github.com/airbnb/lottie-web/tree/master/docs/json).
 public class LottieAnimation: Codable, DictionaryInitializable {
+    public init(
+        startFrame: AnimationFrameTime,
+        endFrame: AnimationFrameTime,
+        framerate: Double,
+        version: String,
+        type: CoordinateSpace,
+        width: Double,
+        height: Double,
+        layers: [LayerModel],
+        glyphs: [Glyph]?,
+        fonts: FontList?,
+        assetLibrary: AssetLibrary?,
+        markers: [Marker]?,
+        markerMap: [String : Marker]?,
+        meta: LottieAnimation.MetaInfo?
+    ) {
+        self.startFrame = startFrame
+        self.endFrame = endFrame
+        self.framerate = framerate
+        self.version = version
+        self.type = type
+        self.width = width
+        self.height = height
+        self.layers = layers
+        self.glyphs = glyphs
+        self.fonts = fonts
+        self.assetLibrary = assetLibrary
+        self.markers = markers
+        self.markerMap = markerMap
+        self.meta = meta
+    }
+    
 
   // MARK: Lifecycle
 
@@ -140,34 +172,34 @@ public class LottieAnimation: Codable, DictionaryInitializable {
   }
 
   /// The version of the JSON Schema.
-  let version: String
+  public let version: String
 
   /// The coordinate space of the composition.
-  let type: CoordinateSpace
+  public let type: CoordinateSpace
 
   /// The height of the composition in points.
-  let width: Double
+  public let width: Double
 
   /// The width of the composition in points.
-  let height: Double
+  public let height: Double
 
   /// The list of animation layers
-  let layers: [LayerModel]
+  public var layers: [LayerModel]
 
   /// The list of glyphs used for text rendering
-  let glyphs: [Glyph]?
+  public let glyphs: [Glyph]?
 
   /// The list of fonts used for text rendering
-  let fonts: FontList?
+  public let fonts: FontList?
 
   /// Asset Library
-  let assetLibrary: AssetLibrary?
+  public let assetLibrary: AssetLibrary?
 
   /// Markers
-  let markers: [Marker]?
-  let markerMap: [String: Marker]?
+  public let markers: [Marker]?
+  public let markerMap: [String: Marker]?
   
-  let meta: MetaInfo?
+  public let meta: MetaInfo?
 }
 
 extension LottieAnimation {
