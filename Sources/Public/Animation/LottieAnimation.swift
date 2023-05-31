@@ -209,9 +209,9 @@ extension LottieAnimation {
     }
     
     init(dictionary: [String : Any]) throws {
-      pack = try dictionary.value(for: CodingKeys.pack)
+      pack = try? dictionary.value(for: CodingKeys.pack)
     }
 
-    let pack: String
+    let pack: String?
   }
 }
