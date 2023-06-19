@@ -132,8 +132,8 @@ public class LayerModel: Codable, DictionaryInitializable {
       }
     }
     
-    let type: String
-    let st: St
+    public let type: String
+    public let st: St
     
     init(dictionary: [String : Any]) throws {
       type = try dictionary.value(for: CodingKeys.type)

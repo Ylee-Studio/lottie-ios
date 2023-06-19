@@ -212,6 +212,6 @@ extension LottieAnimation {
       pack = try? dictionary.value(for: CodingKeys.pack)
     }
 
-    let pack: String?
+    public let pack: String?
   }
 }
