@@ -90,12 +90,31 @@ public class LayerModel: Codable, DictionaryInitializable {
     public struct St: Codable, DictionaryInitializable {
       public struct Sub: Codable, DictionaryInitializable {
         enum CodingKeys: String, CodingKey {
-          case force_disable_col
+          case colorDeps
         }
-        public let force_disable_col: Bool
+          
+          public struct ColorDeps: Codable, DictionaryInitializable {
+              init(dictionary: [String : Any]) throws {
+                  value = try dictionary.value(for: CodingKeys.value)
+                  matchName = try dictionary.value(for: CodingKeys.matchName)
+                  displayName = try dictionary.value(for: CodingKeys.displayName)
+              }
+              
+              enum CodingKeys: String, CodingKey {
+                  case value
+                  case matchName = "mn"
+                  case displayName = "nm"
+              }
+              let value: String
+              let matchName: String
+              let displayName: String
+          }
+          
+        public let colorDeps: ColorDeps?
         
         init(dictionary: [String : Any]) throws {
-          force_disable_col = try dictionary.value(for: CodingKeys.force_disable_col)
+            let dictionary: [String: Any]? = try? dictionary.value(for: CodingKeys.colorDeps)
+            colorDeps = try dictionary.map { try ColorDeps(dictionary: $0) }
         }
       }
       
