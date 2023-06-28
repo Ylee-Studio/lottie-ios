@@ -139,10 +139,10 @@ public class LottieAnimation: Codable, DictionaryInitializable {
   // MARK: Public
 
   /// The start time of the composition in frameTime.
-  public let startFrame: AnimationFrameTime
+  public var startFrame: AnimationFrameTime
 
   /// The end time of the composition in frameTime.
-  public let endFrame: AnimationFrameTime
+  public var endFrame: AnimationFrameTime
 
   /// The frame rate of the composition.
   public let framerate: Double

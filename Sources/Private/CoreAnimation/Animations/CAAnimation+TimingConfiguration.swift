@@ -66,8 +66,8 @@ extension CAAnimation {
       clippingParent.beginTime = currentTime - .leastNonzeroMagnitude
     }
       
-    if context.forExportSession {
-        clippingParent.beginTime = AVCoreAnimationBeginTimeAtZero
+    if case let LottiePlayMode.export(beginTime) = context.playMode {
+        clippingParent.beginTime = beginTime
     }
 
     return clippingParent

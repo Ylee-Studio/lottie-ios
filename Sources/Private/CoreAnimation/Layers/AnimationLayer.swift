@@ -21,7 +21,7 @@ struct LayerAnimationContext {
   let animation: LottieAnimation
     
   /// Boolean property. If true begin time for all animations will be prepared for AVExportSession
-  let forExportSession: Bool
+  let playMode: LottiePlayMode
 
   /// The timing configuration that should be applied to `CAAnimation`s
   let timingConfiguration: CoreAnimationLayer.CAMediaTimingConfiguration
