@@ -47,6 +47,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: ./.github/actions/setup
+        with:
+          xcode: '14.3' # Swift 5.8
       - name: Build Example
         run: bundle exec rake build:example:all
 
@@ -137,3 +139,12 @@ jobs:
       - uses: ./.github/actions/setup
       - name: Lint Swift
         run: bundle exec rake lint:swift
+
+  embedded-libraries:
+    name: "Lint Embedded Libraries"
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup
+      - name: Lint Embedded Libraries
+        run: bundle exec rake lint:EmbeddedLibraries

@@ -47,6 +47,7 @@ extension SnapshotConfiguration {
     "Nonanimating/FirstText": .precision(0.99),
     "Nonanimating/verifyLineHeight": .precision(0.99),
     "Nonanimating/blend_mode_test": .precision(0.99),
+    "Issues/issue_2066": .precision(0.9),
 
     /// Test cases for the `AnimationKeypath` / `AnyValueProvider` system
     "Nonanimating/keypathTest": .customValueProviders([
@@ -185,5 +186,6 @@ extension SnapshotConfiguration {
 extension LottieColor {
   static let black = LottieColor(r: 0, g: 0, b: 0, a: 1)
   static let red = LottieColor(r: 1, g: 0, b: 0, a: 1)
+  static let blue = LottieColor(r: 0, g: 0, b: 1, a: 1)
 }
 #endif
