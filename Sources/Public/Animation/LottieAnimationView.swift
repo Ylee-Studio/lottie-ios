@@ -195,7 +195,10 @@ open class LottieAnimationView: LottieAnimationViewBase {
     playMode: LottiePlayMode = .regular,
     completion: LottieCompletionBlock? = nil
   ) {
-    lottieAnimationLayer.play(completion: completion)
+    lottieAnimationLayer.play(
+        playMode: playMode,
+        completion: completion
+    )
   }
 
   /// Plays the animation from a progress (0-1) to a progress (0-1).
