@@ -591,7 +591,7 @@ open class LottieAnimationView: LottieAnimationViewBase {
   /// /// Set the provider on the animationView.
   /// animationView.setValueProvider(redValueProvider, keypath: fillKeypath)
   /// ```
-  public func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
+  public func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
     lottieAnimationLayer.setValueProvider(valueProvider, keypath: keypath)
   }
 
@@ -765,6 +765,8 @@ open class LottieAnimationView: LottieAnimationViewBase {
       self.setNeedsLayout()
       lottieAnimationLayer.animationView = self
     }
+
+    lottieAnimationLayer.animationView = self
   }
 
   override func layoutAnimation() {

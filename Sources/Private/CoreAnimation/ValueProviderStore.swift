@@ -18,13 +18,15 @@ final class ValueProviderStore {
   // MARK: Internal
 
   /// Registers an `AnyValueProvider` for the given `AnimationKeypath`
-  func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
-    logger.assert(
-      valueProvider.typeErasedStorage.isSupportedByCoreAnimationRenderingEngine,
-      """
-      The Core Animation rendering engine doesn't support Value Providers that vend a closure,
-      because that would require calling the closure on the main thread once per frame.
-      """)
+  func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
+    if let valueProvider = valueProvider {
+      logger.assert(
+        valueProvider.typeErasedStorage.isSupportedByCoreAnimationRenderingEngine,
+          """
+          The Core Animation rendering engine doesn't support Value Providers that vend a closure,
+          because that would require calling the closure on the main thread once per frame.
+          """)
+    }
 
     let supportedProperties = PropertyName.allCases.map { $0.rawValue }
     let propertyBeingCustomized = keypath.keys.last ?? ""
@@ -37,7 +39,10 @@ final class ValueProviderStore {
       """)
 
     valueProviders.removeAll(where: { $0.keypath == keypath })
-    valueProviders.append((keypath: keypath, valueProvider: valueProvider))
+
+    if let valueProvider = valueProvider {
+      valueProviders.append((keypath: keypath, valueProvider: valueProvider))
+    }
   }
 
   // Retrieves the custom value keyframes for the given property,

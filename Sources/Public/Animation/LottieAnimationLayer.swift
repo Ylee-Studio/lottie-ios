@@ -677,7 +677,7 @@ public class LottieAnimationLayer: CALayer {
   /// /// Set the provider on the animationView.
   /// animationView.setValueProvider(redValueProvider, keypath: fillKeypath)
   /// ```
-  public func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
+  public func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
     guard let animationLayer = rootAnimationLayer else { return }
 
     valueProviders[keypath] = valueProvider

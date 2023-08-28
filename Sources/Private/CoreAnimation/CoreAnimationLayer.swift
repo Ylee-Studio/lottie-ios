@@ -480,7 +480,7 @@ extension CoreAnimationLayer: RootAnimationLayer {
     return allAnimationKeypaths
   }
 
-  func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
+  func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
     valueProviderStore.setValueProvider(valueProvider, keypath: keypath)
 
     // We need to rebuild the current animation after registering a value provider,
