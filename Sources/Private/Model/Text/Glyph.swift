@@ -6,11 +6,11 @@
 //
 
 /// A model that holds a vector character
-final class Glyph: Codable, Sendable, DictionaryInitializable {
+public final class Glyph: Codable, Sendable, DictionaryInitializable {
 
   // MARK: Lifecycle
 
-  required init(from decoder: Decoder) throws {
+  required public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: Glyph.CodingKeys.self)
     character = try container.decode(String.self, forKey: .character)
     fontSize = try container.decode(Double.self, forKey: .fontSize)
@@ -28,7 +28,7 @@ final class Glyph: Codable, Sendable, DictionaryInitializable {
     }
   }
 
-  init(dictionary: [String: Any]) throws {
+  public init(dictionary: [String: Any]) throws {
     character = try dictionary.value(for: CodingKeys.character)
     fontSize = try dictionary.value(for: CodingKeys.fontSize)
     fontFamily = try dictionary.value(for: CodingKeys.fontFamily)
@@ -64,7 +64,7 @@ final class Glyph: Codable, Sendable, DictionaryInitializable {
   /// The Shape Data of the Character
   let shapes: [ShapeItem]
 
-  func encode(to encoder: Encoder) throws {
+  public func encode(to encoder: Encoder) throws {
     var container = encoder.container(keyedBy: CodingKeys.self)
 
     try container.encode(character, forKey: .character)

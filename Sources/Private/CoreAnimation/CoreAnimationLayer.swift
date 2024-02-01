@@ -261,6 +261,7 @@ final class CoreAnimationLayer: BaseAnimationLayer {
 
     let layerContext = LayerAnimationContext(
       animation: animation,
+      playMode: configuration.animationContext.playMode,
       timingConfiguration: configuration.timingConfiguration,
       startFrame: configuration.animationContext.playFrom,
       endFrame: configuration.animationContext.playTo,
@@ -487,7 +488,7 @@ extension CoreAnimationLayer: RootAnimationLayer {
     return allAnimationKeypaths
   }
 
-  func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
+  func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
     valueProviderStore.setValueProvider(valueProvider, keypath: keypath)
 
     // We need to rebuild the current animation after registering a value provider,

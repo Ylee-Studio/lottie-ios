@@ -6,11 +6,11 @@
 //
 
 /// A time marker
-final class Marker: Codable, Sendable, DictionaryInitializable {
+public final class Marker: Codable, Sendable, DictionaryInitializable {
 
   // MARK: Lifecycle
 
-  init(dictionary: [String: Any]) throws {
+  public init(dictionary: [String: Any]) throws {
     name = try dictionary.value(for: CodingKeys.name)
     frameTime = try dictionary.value(for: CodingKeys.frameTime)
     durationFrameTime = try dictionary.value(for: CodingKeys.durationFrameTime)

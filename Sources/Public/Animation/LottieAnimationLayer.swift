@@ -102,7 +102,10 @@ public class LottieAnimationLayer: CALayer {
   /// Plays the animation from its current state to the end.
   ///
   /// - Parameter completion: An optional completion closure to be called when the animation completes playing.
-  open func play(completion: LottieCompletionBlock? = nil) {
+  open func play(
+    playMode: LottiePlayMode = .regular,
+    completion: LottieCompletionBlock? = nil
+  ) {
     guard let animation else { return }
 
     defer {
@@ -118,6 +121,7 @@ public class LottieAnimationLayer: CALayer {
     let context = AnimationContext(
       playFrom: CGFloat(animation.startFrame),
       playTo: CGFloat(animation.endFrame),
+      playMode: playMode,
       closure: completion)
     removeCurrentAnimationIfNecessary()
     addNewAnimationForContext(context)
@@ -846,7 +850,7 @@ public class LottieAnimationLayer: CALayer {
   /// /// Set the provider on the animationView.
   /// animationView.setValueProvider(redValueProvider, keypath: fillKeypath)
   /// ```
-  public func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
+  public func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
     guard let animationLayer = rootAnimationLayer else { return }
 
     valueProviders[keypath] = valueProvider

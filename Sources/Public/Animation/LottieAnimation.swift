@@ -22,6 +22,38 @@ public enum CoordinateSpace: Int, Codable, Sendable {
 /// Codable, see JSON schema [here](https://github.com/airbnb/lottie-web/tree/master/docs/json).
 public final class LottieAnimation: Codable, Sendable, DictionaryInitializable {
 
+    public init(
+        startFrame: AnimationFrameTime,
+        endFrame: AnimationFrameTime,
+        framerate: Double,
+        version: String,
+        type: CoordinateSpace,
+        width: Double,
+        height: Double,
+        layers: [LayerModel],
+        glyphs: [Glyph]?,
+        fonts: FontList?,
+        assetLibrary: AssetLibrary?,
+        markers: [Marker]?,
+        markerMap: [String : Marker]?,
+        meta: LottieAnimation.MetaInfo?
+    ) {
+        self.startFrame = startFrame
+        self.endFrame = endFrame
+        self.framerate = framerate
+        self.version = version
+        self.type = type
+        self.width = width
+        self.height = height
+        self.layers = layers
+        self.glyphs = glyphs
+        self.fonts = fonts
+        self.assetLibrary = assetLibrary
+        self.markers = markers
+        self.markerMap = markerMap
+        self.meta = meta
+    }
+
   // MARK: Lifecycle
 
   required public init(from decoder: Decoder) throws {
@@ -48,9 +80,11 @@ public final class LottieAnimation: Codable, Sendable, DictionaryInitializable {
     } else {
       markerMap = nil
     }
+    
+    meta = try container.decodeIfPresent(MetaInfo.self, forKey: .meta)
   }
 
-  public init(dictionary: [String: Any]) throws {
+  required public init(dictionary: [String: Any]) throws {
     version = try dictionary.value(for: CodingKeys.version)
     if
       let typeRawValue = dictionary[CodingKeys.type.rawValue] as? Int,
@@ -94,15 +128,21 @@ public final class LottieAnimation: Codable, Sendable, DictionaryInitializable {
       markers = nil
       markerMap = nil
     }
+    
+    if let metaDictionary = dictionary[CodingKeys.meta.rawValue] as? [String: Any] {
+      meta = try MetaInfo(dictionary: metaDictionary)
+    } else {
+      meta = nil
+    }
   }
 
   // MARK: Public
 
   /// The start time of the composition in frameTime.
-  public let startFrame: AnimationFrameTime
+  public var startFrame: AnimationFrameTime
 
   /// The end time of the composition in frameTime.
-  public let endFrame: AnimationFrameTime
+  public var endFrame: AnimationFrameTime
 
   /// The frame rate of the composition.
   public let framerate: Double
@@ -128,36 +168,37 @@ public final class LottieAnimation: Codable, Sendable, DictionaryInitializable {
     case fonts
     case assetLibrary = "assets"
     case markers
+    case meta
   }
 
   /// The version of the JSON Schema.
-  let version: String
+  public let version: String
 
   /// The coordinate space of the composition.
-  let type: CoordinateSpace
+  public let type: CoordinateSpace
 
   /// The height of the composition in points.
-  let width: Double
+  public let width: Double
 
   /// The width of the composition in points.
-  let height: Double
+  public let height: Double
 
   /// The list of animation layers
-  let layers: [LayerModel]
+  public var layers: [LayerModel]
 
   /// The list of glyphs used for text rendering
-  let glyphs: [Glyph]?
+  public let glyphs: [Glyph]?
 
   /// The list of fonts used for text rendering
-  let fonts: FontList?
+  public let fonts: FontList?
 
   /// Asset Library
-  let assetLibrary: AssetLibrary?
+  public let assetLibrary: AssetLibrary?
 
   /// Markers
-  let markers: [Marker]?
-  let markerMap: [String: Marker]?
-
+  public let markers: [Marker]?
+  public let markerMap: [String: Marker]?
+    
   /// The marker to use if "reduced motion" is enabled.
   /// Supported marker names are case insensitive, and include:
   ///  - reduced motion
@@ -175,5 +216,21 @@ public final class LottieAnimation: Codable, Sendable, DictionaryInitializable {
     return markers?.first(where: { marker in
       allowedReducedMotionMarkerNames.contains(marker.name.lowercased())
     })
+  }
+  
+  public let meta: MetaInfo?
+}
+
+extension LottieAnimation {
+  public final class MetaInfo: Codable, DictionaryInitializable {
+    public enum CodingKeys: String, CodingKey {
+      case pack = "ct"
+    }
+    
+    init(dictionary: [String : Any]) throws {
+      pack = try? dictionary.value(for: CodingKeys.pack)
+    }
+
+    public let pack: String?
   }
 }

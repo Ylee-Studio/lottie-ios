@@ -2,6 +2,7 @@
 // Copyright © 2022 Airbnb Inc. All rights reserved.
 
 import QuartzCore
+import AVFoundation
 
 extension CAAnimation {
   /// Creates a `CAAnimation` that wraps this animation,
@@ -63,6 +64,10 @@ extension CAAnimation {
     if context.timingConfiguration.speed == 0 {
       let currentTime = layer.convertTime(CACurrentMediaTime(), from: nil)
       clippingParent.beginTime = currentTime - .leastNonzeroMagnitude
+    }
+      
+    if case let LottiePlayMode.export(beginTime) = context.playMode {
+        clippingParent.beginTime = beginTime
     }
 
     return clippingParent

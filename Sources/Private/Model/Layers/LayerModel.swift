@@ -80,11 +80,92 @@ public enum BlendMode: Int, Codable {
 // MARK: - LayerModel
 
 /// A base top container for shapes, images, and other view objects.
-class LayerModel: Codable, DictionaryInitializable {
+public class LayerModel: Codable, DictionaryInitializable {
+  
+  public final class MetaInfo: Codable, DictionaryInitializable {
+    enum CodingKeys: String, CodingKey {
+      case type = "cur"
+      case st = "st"
+    }
+    
+    public struct St: Codable, DictionaryInitializable {
+      public struct Sub: Codable, DictionaryInitializable {
+        enum CodingKeys: String, CodingKey {
+          case colorDeps
+        }
+          
+          public struct ColorDeps: Codable, DictionaryInitializable {
+              init(dictionary: [String : Any]) throws {
+                  value = try dictionary.value(for: CodingKeys.value)
+                  matchName = try dictionary.value(for: CodingKeys.matchName)
+                  displayName = try dictionary.value(for: CodingKeys.displayName)
+              }
+              
+              enum CodingKeys: String, CodingKey {
+                  case value
+                  case matchName = "mn"
+                  case displayName = "nm"
+              }
+              let value: String
+              let matchName: String
+              let displayName: String
+          }
+          
+        public let colorDeps: ColorDeps?
+        
+        init(dictionary: [String : Any]) throws {
+            let dictionary: [String: Any]? = try? dictionary.value(for: CodingKeys.colorDeps)
+            colorDeps = try dictionary.map { try ColorDeps(dictionary: $0) }
+        }
+      }
+      
+      enum CodingKeys: String, CodingKey {
+        case sub
+        case movable
+        case tintable
+        case monochrome
+        case add_lib
+        case pro
+        case lib_tint
+        case lib_col
+      }
+      
+      public let sub: Sub?
+      public let movable: Bool?
+      public let tintable: Bool?
+      public let monochrome: Bool?
+      public let add_lib: Bool?
+      public let pro: Bool?
+      public let lib_tint: Bool?
+      public let lib_col: String?
+
+      init(dictionary: [String : Any]) throws {
+        let subDictionary: [String: Any]? = try? dictionary.value(for: CodingKeys.sub)
+        sub = try subDictionary.map { try Sub(dictionary: $0) }
+        movable = try? dictionary.value(for: CodingKeys.movable)
+        tintable = try? dictionary.value(for: CodingKeys.tintable)
+        monochrome = try? dictionary.value(for: CodingKeys.monochrome)
+        add_lib = try? dictionary.value(for: CodingKeys.add_lib)
+        pro = try? dictionary.value(for: CodingKeys.pro)
+        lib_tint = try? dictionary.value(for: CodingKeys.lib_tint)
+        lib_col = try? dictionary.value(for: CodingKeys.lib_col)
+      }
+    }
+    
+    public let type: String
+    public let st: St
+    
+    init(dictionary: [String : Any]) throws {
+      type = try dictionary.value(for: CodingKeys.type)
+      let stDictionary: [String: Any] = try dictionary.value(for: CodingKeys.st)
+      st = try St(dictionary: stDictionary)
+    }
+    
+  }
 
   // MARK: Lifecycle
 
-  required init(from decoder: Decoder) throws {
+  required public init(from decoder: Decoder) throws {
     let container = try decoder.container(keyedBy: LayerModel.CodingKeys.self)
     name = try container.decodeIfPresent(String.self, forKey: .name) ?? "Layer"
     index = try container.decodeIfPresent(Int.self, forKey: .index) ?? .random(in: Int.min...Int.max)
@@ -102,9 +183,10 @@ class LayerModel: Codable, DictionaryInitializable {
     hidden = try container.decodeIfPresent(Bool.self, forKey: .hidden) ?? false
     styles = try container.decodeIfPresent([LayerStyle].self, ofFamily: LayerStyleType.self, forKey: .styles) ?? []
     effects = try container.decodeIfPresent([LayerEffect].self, ofFamily: LayerEffectType.self, forKey: .effects) ?? []
+    meta = try container.decodeIfPresent(MetaInfo.self, forKey: .meta)
   }
 
-  required init(dictionary: [String: Any]) throws {
+  required public init(dictionary: [String: Any]) throws {
     name = (try? dictionary.value(for: CodingKeys.name)) ?? "Layer"
     index = try dictionary.value(for: CodingKeys.index) ?? .random(in: Int.min...Int.max)
     type = LayerType(rawValue: try dictionary.value(for: CodingKeys.type)) ?? .null
@@ -158,6 +240,12 @@ class LayerModel: Codable, DictionaryInitializable {
     } else {
       effects = []
     }
+
+    if let metaDictionary = dictionary[CodingKeys.meta.rawValue] as? [String: Any] {
+      meta = try MetaInfo(dictionary: metaDictionary)
+    } else {
+      meta = nil
+    }
   }
 
   // MARK: Internal
@@ -202,6 +290,8 @@ class LayerModel: Codable, DictionaryInitializable {
 
   /// Whether or not this layer is hidden, in which case it will not be rendered.
   let hidden: Bool
+  
+  public let meta: MetaInfo?
 
   /// A list of styles to apply to this layer
   let styles: [LayerStyle]
@@ -228,6 +318,7 @@ class LayerModel: Codable, DictionaryInitializable {
     case hidden = "hd"
     case styles = "sy"
     case effects = "ef"
+    case meta = "meta"
   }
 }
 

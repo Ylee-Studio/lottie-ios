@@ -229,10 +229,12 @@ final class MainThreadAnimationLayer: CALayer, RootAnimationLayer {
     animationLayers.flatMap { $0.allKeypaths() }
   }
 
-  func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
+  func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
     for layer in animationLayers {
       if let foundProperties = layer.nodeProperties(for: keypath) {
         for property in foundProperties {
+          // need to clean up properties with value providers
+          guard let valueProvider = valueProvider else { continue }
           property.setProvider(provider: valueProvider)
         }
         layer.displayWithFrame(frame: presentation()?.currentFrame ?? currentFrame, forceUpdates: true)

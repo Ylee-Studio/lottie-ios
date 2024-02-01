@@ -6,6 +6,7 @@
 //
 
 import QuartzCore
+import AVFoundation
 
 // MARK: - LottieBackgroundBehavior
 
@@ -82,6 +83,11 @@ extension LottieLoopMode: Equatable {
       return false
     }
   }
+}
+
+public enum LottiePlayMode {
+    case export(beginTime: CFTimeInterval = AVCoreAnimationBeginTimeAtZero)
+    case regular
 }
 
 // MARK: - LottieAnimationView
@@ -228,8 +234,14 @@ open class LottieAnimationView: LottieAnimationViewBase {
   /// Plays the animation from its current state to the end.
   ///
   /// - Parameter completion: An optional completion closure to be called when the animation completes playing.
-  open func play(completion: LottieCompletionBlock? = nil) {
-    lottieAnimationLayer.play(completion: completion)
+  open func play(
+    playMode: LottiePlayMode = .regular,
+    completion: LottieCompletionBlock? = nil
+  ) {
+    lottieAnimationLayer.play(
+        playMode: playMode,
+        completion: completion
+    )
   }
 
   /// Plays the animation from a progress (0-1) to a progress (0-1).
@@ -669,7 +681,7 @@ open class LottieAnimationView: LottieAnimationViewBase {
   /// /// Set the provider on the animationView.
   /// animationView.setValueProvider(redValueProvider, keypath: fillKeypath)
   /// ```
-  public func setValueProvider(_ valueProvider: AnyValueProvider, keypath: AnimationKeypath) {
+  public func setValueProvider(_ valueProvider: AnyValueProvider?, keypath: AnimationKeypath) {
     lottieAnimationLayer.setValueProvider(valueProvider, keypath: keypath)
   }
 
@@ -845,6 +857,8 @@ open class LottieAnimationView: LottieAnimationViewBase {
       self.invalidateIntrinsicContentSize()
       self.setNeedsLayout()
     }
+
+    lottieAnimationLayer.animationView = self
   }
 
   override func layoutAnimation() {

@@ -5,11 +5,11 @@
 //  Created by Brandon Withrow on 1/9/19.
 //
 
-final class AssetLibrary: Codable, AnyInitializable, Sendable {
+public final class AssetLibrary: Codable, AnyInitializable, Sendable {
 
   // MARK: Lifecycle
 
-  required init(from decoder: Decoder) throws {
+  required public init(from decoder: Decoder) throws {
     var container = try decoder.unkeyedContainer()
     var containerForKeys = container
 
@@ -38,7 +38,7 @@ final class AssetLibrary: Codable, AnyInitializable, Sendable {
     self.imageAssets = imageAssets
   }
 
-  init(value: Any) throws {
+  public init(value: Any) throws {
     guard let dictionaries = value as? [[String: Any]] else {
       throw InitializableError.invalidInput()
     }
@@ -68,7 +68,7 @@ final class AssetLibrary: Codable, AnyInitializable, Sendable {
   let imageAssets: [String: ImageAsset]
   let precompAssets: [String: PrecompAsset]
 
-  func encode(to encoder: Encoder) throws {
+  public func encode(to encoder: Encoder) throws {
     var container = encoder.unkeyedContainer()
     try container.encode(contentsOf: Array(assets.values))
   }
