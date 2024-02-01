@@ -857,8 +857,6 @@ open class LottieAnimationView: LottieAnimationViewBase {
       self.invalidateIntrinsicContentSize()
       self.setNeedsLayout()
     }
-
-    lottieAnimationLayer.animationView = self
   }
 
   override func layoutAnimation() {
