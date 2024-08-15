@@ -26,6 +26,7 @@ public final class ImageAsset: Asset {
     directory = try container.decode(String.self, forKey: .directory)
     width = try container.decode(Double.self, forKey: .width)
     height = try container.decode(Double.self, forKey: .height)
+    resourceId = try container.decodeIfPresent(String.self, forKey: .resourceId)
     try super.init(from: decoder)
   }
 
@@ -34,6 +35,7 @@ public final class ImageAsset: Asset {
     directory = try dictionary.value(for: CodingKeys.directory)
     width = try dictionary.value(for: CodingKeys.width)
     height = try dictionary.value(for: CodingKeys.height)
+    resourceId = try dictionary.value(for: CodingKeys.resourceId)
     try super.init(dictionary: dictionary)
   }
 
@@ -50,6 +52,8 @@ public final class ImageAsset: Asset {
 
   public let height: Double
 
+  public let resourceId: String?
+
   override public func encode(to encoder: Encoder) throws {
     try super.encode(to: encoder)
     var container = encoder.container(keyedBy: CodingKeys.self)
@@ -57,6 +61,7 @@ public final class ImageAsset: Asset {
     try container.encode(directory, forKey: .directory)
     try container.encode(width, forKey: .width)
     try container.encode(height, forKey: .height)
+    try container.encodeIfPresent(resourceId, forKey: .resourceId)
   }
 
   // MARK: Internal
@@ -66,6 +71,7 @@ public final class ImageAsset: Asset {
     case directory = "u"
     case width = "w"
     case height = "h"
+    case resourceId = "remFlNm"
   }
 }
 
