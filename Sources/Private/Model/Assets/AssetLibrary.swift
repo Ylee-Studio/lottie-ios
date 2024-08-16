@@ -7,6 +7,10 @@
 
 public final class AssetLibrary: Codable, AnyInitializable, Sendable {
 
+  public var imagesList: [ImageAsset] {
+    imageAssets.map { $0.value }
+  }
+
   // MARK: Lifecycle
 
   required public init(from decoder: Decoder) throws {
